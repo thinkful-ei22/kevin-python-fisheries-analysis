@@ -4,6 +4,7 @@ from tabulate import tabulate
 fishing = pd.read_csv('ICESCatchDataset2006-2016.csv')
 
 pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 fishing = fishing[['Species', 'Area', 'Country', 
 '2016', '2015', '2014', '2013', '2012', '2011', 
@@ -22,7 +23,7 @@ fishing_test['Depleted'] = pd.Series('No', index=fishing.index)
 # print(fishing[['Unnamed: 23']])
 # print(tabulate(fishing_two, headers='keys', tablefmt='grid'))
 
-def location (fishing):
+def data_analysis (fishing, lower, upper):
   for index, row in fishing.iterrows():
     count = row[2]
     # print(row)
@@ -30,20 +31,31 @@ def location (fishing):
     # print(index)
     # print(row[2])
     # print(row[2] < row[12] * .7)
-    if row[3] < row[13]*.7:
+    if row[upper] < row[lower]*.799:
+      #.79 value retrieved from Technical Guidance On the Use of Precautionary
+      #  Approaches to Implementing National Standard 1 of the
+      # Magnuson-Stevens Fishery Conservation and Management Act 1998
       # print('yes')
       fishing.at[index, 'Depleted'] = 'Yes'
 
-# str = input('Enter in the upper limit year')
-# print(str)
+lower_limit = input('Enter in the lower limit year to analyze:  ')
+print(lower_limit)
+upper_limit = input('Enter in the upper limit year to analyze:  ')
+print(upper_limit)
 
-location(fishing_test)
-print(tabulate(fishing_test, headers='keys', tablefmt='grid'))
+data_analysis(fishing_test, lower_limit, upper_limit)
+# print(tabulate(fishing_test, headers='keys', tablefmt='grid'))
 original_data = len(fishing)
 print('There are %d total entries in the 2006-2016 ICES Nominal Catch Dataset' % original_data)
 filtered_data = len(fishing_data)
-print('%d entries are being analyzed that contain non-zero values.' % filtered_data)
-
+print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, filtered_data))
+df = fishing['Species'].value_counts()
+unique_species = len(df)
+print('There are %d unique species being caught in the Atlantic Northeast.' % unique_species)
+str = fishing_test['Depleted'].value_counts()
+print(str)
+proportion = str['Yes']/(str['Yes']+str['No'])
+print('There are %d entries that are classified as depleted and %d entries that are not \n -- a proportion of %.4f' % (str['Yes'], str['No'], proportion))
 #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
 
 # do analysis on the years 
