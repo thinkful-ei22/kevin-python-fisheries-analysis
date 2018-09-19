@@ -23,22 +23,33 @@ fishing_test['Depleted'] = pd.Series('No', index=fishing.index)
 # print(fishing[['Unnamed: 23']])
 # print(tabulate(fishing_two, headers='keys', tablefmt='grid'))
 
-def data_analysis (original, fishing, lower, upper):
-  # try:
-  #   for column in fishing:
-  #     print(column)
-  #     print(lower != column, lower)
-  #     if lower == column:
-  #       return
-  #     else:
-  #       raise KeyError('This is not a valid lower limit Year')
-  #     if upper == column:
-  #       return
-  #     else:
-  #       raise KeyError('This is not a valid upper limit Year')
-  # except  Exception as error: 
-  #   print('Caught this error: ' + repr(error))
-  #   return
+def depletion_breakdown (original, fishing, lower, upper):
+  try:
+    l_count = 0
+    u_count = 0
+    for column in fishing:
+      # print(column)
+      # print(lower == column, lower)
+      if lower == column:
+        l_count+=1
+      else:
+        continue
+
+      if l_count == 0: 
+        raise KeyError('This is not a valid lower limit Year')
+
+      if upper == column:
+        u_count+=1
+        break
+        return
+      else:
+        continue
+        
+      if u_count == 0:
+        raise KeyError('This is not a valid upper limit Year')
+        return
+  except Exception as error: 
+    print('Caught this error: ' + repr(error))
 
   for index, row in fishing.iterrows():
     count = row[2]
@@ -70,12 +81,15 @@ def data_analysis (original, fishing, lower, upper):
   print('There are %d entries that are classified as depleted and %d entries that are not \n -- a proportion of %.4f' % (depl_yes, depl_no, proportion))
   #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
 
+# def detailed_species_depletion ():
+
+
 lower_limit = input('Enter in the lower limit year to analyze:  ')
 print(lower_limit)
 upper_limit = input('Enter in the upper limit year to analyze:  ')
 print(upper_limit)
 
-data_analysis(fishing, fishing_test, lower_limit, upper_limit)
+depletion_breakdown(fishing, fishing_test, lower_limit, upper_limit)
 
 
 # do analysis on the years 
