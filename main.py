@@ -13,6 +13,8 @@ fishing = fishing.dropna(axis='rows')
 fishing_data = fishing[(fishing != 0).all(1)]
 fishing_test = fishing_data[8:14]
 fishing_test['Depleted'] = pd.Series('No', index=fishing.index)
+# values each year are in the units of TLW -- tons of live weight
+# species are denoted by an abbreviation ex. ANF
 
 # fishing_two = fishing_two[0:18]
 # fishing=fishing.replace(nan,0)
