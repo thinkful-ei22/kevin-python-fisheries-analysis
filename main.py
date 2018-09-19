@@ -44,7 +44,7 @@ def depletion_breakdown (original, fishing, lower, upper):
         return
       else:
         continue
-        
+
       if u_count == 0:
         raise KeyError('This is not a valid upper limit Year')
         return
@@ -52,7 +52,6 @@ def depletion_breakdown (original, fishing, lower, upper):
     print('Caught this error: ' + repr(error))
 
   for index, row in fishing.iterrows():
-    count = row[2]
     # print(row)
     # print(row['2016'])
     # print(index)
@@ -72,13 +71,14 @@ def depletion_breakdown (original, fishing, lower, upper):
   print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, len(fishing_test)), end='\n\n')
   df = fishing['Species'].value_counts()
   unique_species = len(df)
-  print('There are %d unique species being caught in the Atlantic Northeast.' % unique_species, end='\n\n')
+  print('There are %d unique species being caught in the Atlantic Northeast based on the year range.' % unique_species, end='\n\n')
   depletion_totals = fishing_test['Depleted'].value_counts()
   # print(str)
   depl_yes = depletion_totals['Yes']
   depl_no = depletion_totals['No']
   proportion = depl_yes/(depl_no+depl_yes)
-  print('There are %d entries that are classified as depleted and %d entries that are not \n -- a proportion of %.4f' % (depl_yes, depl_no, proportion))
+  percentage = proportion*100
+  print('There are %d entries that are classified as depleted and %d entries that are not \n -- a proportion of %.4f or %.2f%%.' % (depl_yes, depl_no, proportion, percentage))
   #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
 
 # def detailed_species_depletion ():
