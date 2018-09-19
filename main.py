@@ -23,7 +23,23 @@ fishing_test['Depleted'] = pd.Series('No', index=fishing.index)
 # print(fishing[['Unnamed: 23']])
 # print(tabulate(fishing_two, headers='keys', tablefmt='grid'))
 
-def data_analysis (fishing, lower, upper):
+def data_analysis (original, fishing, lower, upper):
+  # try:
+  #   for column in fishing:
+  #     print(column)
+  #     print(lower != column, lower)
+  #     if lower == column:
+  #       return
+  #     else:
+  #       raise KeyError('This is not a valid lower limit Year')
+  #     if upper == column:
+  #       return
+  #     else:
+  #       raise KeyError('This is not a valid upper limit Year')
+  # except  Exception as error: 
+  #   print('Caught this error: ' + repr(error))
+  #   return
+
   for index, row in fishing.iterrows():
     count = row[2]
     # print(row)
@@ -37,25 +53,29 @@ def data_analysis (fishing, lower, upper):
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
       # print('yes')
       fishing.at[index, 'Depleted'] = 'Yes'
+  
+  print(tabulate(fishing_test, headers='keys', tablefmt='grid'))
+  original_data = len(original)
+  print('There are %d total entries in the 2006-2016 ICES Nominal Catch Dataset.' % original_data, end='\n\n')
+  filtered_data = len(fishing_data)
+  print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, len(fishing_test)), end='\n\n')
+  df = fishing['Species'].value_counts()
+  unique_species = len(df)
+  print('There are %d unique species being caught in the Atlantic Northeast.' % unique_species, end='\n\n')
+  depletion_totals = fishing_test['Depleted'].value_counts()
+  # print(str)
+  depl_yes = depletion_totals['Yes']
+  depl_no = depletion_totals['No']
+  proportion = depl_yes/(depl_no+depl_yes)
+  print('There are %d entries that are classified as depleted and %d entries that are not \n -- a proportion of %.4f' % (depl_yes, depl_no, proportion))
+  #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
 
 lower_limit = input('Enter in the lower limit year to analyze:  ')
 print(lower_limit)
 upper_limit = input('Enter in the upper limit year to analyze:  ')
 print(upper_limit)
 
-data_analysis(fishing_test, lower_limit, upper_limit)
-# print(tabulate(fishing_test, headers='keys', tablefmt='grid'))
-original_data = len(fishing)
-print('There are %d total entries in the 2006-2016 ICES Nominal Catch Dataset' % original_data)
-filtered_data = len(fishing_data)
-print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, filtered_data))
-df = fishing['Species'].value_counts()
-unique_species = len(df)
-print('There are %d unique species being caught in the Atlantic Northeast.' % unique_species)
-str = fishing_test['Depleted'].value_counts()
-print(str)
-proportion = str['Yes']/(str['Yes']+str['No'])
-print('There are %d entries that are classified as depleted and %d entries that are not \n -- a proportion of %.4f' % (str['Yes'], str['No'], proportion))
-#this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
+data_analysis(fishing, fishing_test, lower_limit, upper_limit)
+
 
 # do analysis on the years 
