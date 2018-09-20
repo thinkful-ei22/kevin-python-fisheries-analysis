@@ -11,7 +11,8 @@ fishing = fishing[['Species', 'Area', 'Country',
 '2010', '2009', '2008', '2007', '2006' ]]
 
 fishing_data = fishing.dropna(axis='rows')
-fishing_data = fishing_data[(fishing != 0).all(1)]
+fishing_data = fishing_data[(fishing_data != 0).all(1)]
+
 fishing_test = fishing_data[8:14]
 fishing_test.insert(len(fishing_test.columns), 'Depleted', 'No')
 # values each year are in the units of TLW -- tons of live weight
