@@ -13,7 +13,7 @@ fishing = fishing[['Species', 'Area', 'Country',
 fishing_data = fishing.dropna(axis='rows')
 fishing_data = fishing_data[(fishing != 0).all(1)]
 fishing_test = fishing_data[8:14]
-fishing_test['Depleted'] = 'No'
+fishing_test.insert(len(fishing_test.columns), 'Depleted', 'No')
 # values each year are in the units of TLW -- tons of live weight
 # species are denoted by an abbreviation ex. ANF
 
