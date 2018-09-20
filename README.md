@@ -1,3 +1,6 @@
-  ## European Fisheries Depletion Report -- 2006 - 2016
+  ## European Fisheries Data Analysis Program -- 2006 - 2016
 
-  I want to use data collected by fisheries to determine what fish species are being overfished.
+  Through the utilization of this program, in-depth analysis of the status of the fishery stocks in the Northeast Altantic can be extrapolated. 
+  
+  This data has been submitted by ICES - The International Council for the Exploration of the Sea - a coalition of participating countries. 
+  
