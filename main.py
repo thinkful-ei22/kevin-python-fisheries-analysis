@@ -43,10 +43,10 @@ def depletion_breakdown (original, fishing, lower, upper):
         continue
 
     if l_count == 0: 
-      raise KeyError('This is not a valid lower limit Year')
+      raise KeyError('This is not a valid lower limit Year.')
       return
     if u_count == 0:
-      raise KeyError('This is not a valid upper limit Year')
+      raise KeyError('This is not a valid upper limit Year.')
       return
   except Exception as error: 
     print('Caught this error: ' + repr(error))
@@ -101,11 +101,14 @@ def sum_annual_tlw (fishing, year):
         count+=1
       else:
         continue
-      if count == 0: 
-        raise KeyError('This is not a valid lower limit Year')
-        return
+
+    if count == 0: 
+      raise KeyError('This is not a valid Year.')
+      return
+
   except Exception as error: 
     print('Caught this error: ' + repr(error))
+    return
 
   tlw_annual = fishing[year].sum()
   year = int(year)
@@ -136,6 +139,7 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
     if u_count == 0:
       raise KeyError('This is not a valid upper limit Year')
       return
+
   except Exception as error: 
     print('Caught this error: ' + repr(error))
     return
@@ -150,9 +154,22 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
   main_function() 
 
 def detailed_species_depletion (fishing, species):
+  try:
+    count = 0
+    if (fishing['Species'] == species).any():
+      count+=1
+
+    if count == 0: 
+      raise KeyError('This is not a valid Species Abbreviation. Examples: ANF, GUU')
+      return
+
+  except Exception as error: 
+    print('Caught this error: ' + repr(error))
+    return
+
   # print(species)
   # print(type (species))
-  print(fishing)
+  # print(fishing)
   filtered_species_1 = fishing.loc[fishing['Species'] == species, '2016': '2006']
   # filtered_species_1.insert(len(filtered_species_1.columns), 'Depleted', 'No')
   # print(filtered_species_1)
@@ -267,7 +284,7 @@ def bar_graph_per_annum_tlw (fishing):
   
 
 def main_function ():
-  print('===========================================================================|')
+  print('|==========================================================================|')
   print('Available Functions:', end='\n\n')
   print('Numerical Analysis:', end='\n\n')
   print('Enter 1 to Determine Total Annual Catch for a Year.')
@@ -278,7 +295,7 @@ def main_function ():
   print('Graphical Representation:', end='\n\n')
   print('Enter 6 to Display a Bar Graph of each Years Annual TLW from 2006 to 2016.')
   print('Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
-  print('===========================================================================|')
+  print('|==========================================================================|')
   
   option = input('Enter in an option to run an analytical function (or 0 to exit):  ')
   option = int(option)
