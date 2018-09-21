@@ -26,11 +26,11 @@
 
   Users can display a bar graph of each years annual TLW from 2006 to 2016 of the entire Dataset.
 
-  ![Bar Graph](./BarGraphSubset.png)
+  ![Bar Graph](./screenshots/BarGraphSubset.png)
 
   This is a Bar Graph generated via matplotlib function #7, using a small subset of the data entries (6).
 
-  ![Bar Graph](./BarGraphAllEntries.png)
+  ![Bar Graph](./screenshots/BarGraphAllEntries.png)
 
   This is a Bar Graph generated via matplotlib function #7 using all of the 7343 entries containing non-zero values.
 
