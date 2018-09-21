@@ -4,7 +4,7 @@
   
   This data has been submitted by ICES - The International Council for the Exploration of the Sea - a coalition of 20 participating European countries. 
 
-  This project is built on the programming language, Python, in collaboration with pandas, numpy, tabulate, and matplotlib primarily.
+  This project is built on the programming language, Python, in collaboration with pandas DataFrames, numpy, tabulate, and matplot primarily.
 
   Interaction with the program is done through the python terminal. An interactive menu will prompt you to choose a function and once completed, you can begin to run another. 
 
@@ -26,11 +26,11 @@
 
   Users can display a bar graph of each years annual TLW from 2006 to 2016 of the entire Dataset.
 
-  ![Bar Graph](./screenshots/BarGraphSubset.png)
+  ![Bar Graph](./BarGraphSubset.png)
 
   This is a Bar Graph generated via matplotlib function #7, using a small subset of the data entries (6).
 
-  ![Bar Graph](./screenshots/BarGraphAllEntries.png)
+  ![Bar Graph](./BarGraphAllEntries.png)
 
   This is a Bar Graph generated via matplotlib function #7 using all of the 7343 entries containing non-zero values.
 
