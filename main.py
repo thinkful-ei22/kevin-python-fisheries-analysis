@@ -300,9 +300,9 @@ def bar_graph_per_annum_tlw (fishing):
   print(sum_new, sum_new[0], type(sum_new[0]))
   # year_annum = sum_everything.loc[3:14]
   y_pos = np.arange(len(years))
-  print(y_pos)
-  print(sum_new)
-  print(max(sum_new))
+  # print(y_pos)
+  # print(sum_new)
+  # print(max(sum_new))
   plt.bar(y_pos, sum_new)
   plt.ylim([min(sum_new) - (min(sum_new)*.03), max(sum_new) + (max(sum_new)*.03)])
   plt.xticks(y_pos, years)
@@ -332,10 +332,10 @@ def main_function ():
   print('Enter 3 to Determine Aggregate Catch for a Range of Years.')
   print('Enter 4 to do Quantitative Analysis of the Health of Fishery Stocks.')
   print('Enter 5 to do Quantitative Analysis of the Health of a Specific Fish Species.')
-  print('Enter 6 to do Quantitative Analysis of the Health in a specific Area Code', end='\n\n')
+  print('Enter 6 to do Quantitative Analysis of the Health in a specific Area Code.', end='\n\n')
   print('Graphical Representation:', end='\n\n')
   print('Enter 7 to Display a Bar Graph of each Years Annual TLW from 2006 to 2016.')
-  print('Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
+  print('Enter 8 to Display a Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
   print('|==========================================================================|')
   
   option = input('Enter in an option to run an analytical function (or 0 to exit):  ')
@@ -390,6 +390,10 @@ def main_function ():
   
   if option == 7:
     bar_graph_per_annum_tlw(fishing_test)
+  
+  if option == 8:
+    print('Not yet Implemented')
+    exit()
 
   if option == 0:
     print('Thank you for using this program!')
@@ -398,4 +402,4 @@ def main_function ():
 
 main_function()
 
-# modularize
+# modularize if time
