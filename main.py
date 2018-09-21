@@ -52,16 +52,11 @@ def depletion_breakdown (original, fishing, lower, upper):
     print('Caught this error: ' + repr(error))
 
   for index, row in fishing.iterrows():
-    # print(row)
-    # print(row['2016'])
-    # print(index)
-    # print(row[2])
-    # print(row[2] < row[12] * .7)
+    # print(row, index)
     if row[upper] < row[lower]*.799:
       #.79 value retrieved from Technical Guidance On the Use of Precautionary
       #  Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
-      # print('yes')
       fishing.at[index, 'Depleted'] = 'Yes'
   # print(fishing)
   fishing_new_1 = fishing.loc[:, upper:lower]
@@ -123,16 +118,11 @@ def detailed_species_depletion (fishing, species):
   print(tabulate(filtered_species_new, headers='keys', tablefmt='grid'), end='\n\n')
 
   for index, row in filtered_species_new.iterrows():
-    # print(row)
-    # print(row['2016'])
-    # print(index)
-    # print(row[2])
-    # print(row[2] < row[12] * .7)
+    # print(row, index)
     if row['2016'] < row['2006']*.799:
       #.79 value retrieved from Technical Guidance On the Use of Precautionary
       #  Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
-      # print('yes')
       filtered_species_new.at[index, 'Depleted'] = 'Yes'
 
   print('---- After Analysis ----')
@@ -166,23 +156,17 @@ def area_code_breakdown (fishing, area_code, filter_by_year):
   print('---- Before Analysis ----')
   print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
   for index, row in filtered_area_new.iterrows():
-    # print(row)
-    # print(row['2016'])
-    # print(index)
-    # print(row[2])
-    # print(row[2] < row[12] * .7)
+    # print(row, index)
     if row['2016'] < row['2006']*.799:
       #.79 value retrieved from Technical Guidance On the Use of Precautionary
       #  Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
-      # print('yes')
       filtered_area_new.at[index, 'Depleted'] = 'Yes'
 
   print('---- After Analysis ----')
   print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
   depletion_totals = filtered_area_new['Depleted'].value_counts()
   print(depletion_totals)
-  print(depletion_totals['Yes'])
   # print(depletion_totals['No'])
   if depletion_totals.index.str.contains('Yes').any():
     depl_yes = int(depletion_totals['Yes'])
