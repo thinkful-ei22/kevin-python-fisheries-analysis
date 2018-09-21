@@ -15,12 +15,14 @@ fishing = fishing[['Species', 'Area', 'Country',
 
 fishing_data = fishing.dropna(axis='rows')
 fishing_data = fishing_data[(fishing_data != 0).all(1)]
-fishing_test = fishing_data[8:14]
+################ Here, you can size down the Pandas Data Frame to analyze smaller subsets of the data ##################
+# fishing_test = fishing_data[8:14]
+fishing_test = fishing_data
+#It is currently set to analyzing the full subset of non-zero values -- all 7343 entries of the 52,517 that are non-zero
+########################################################################################################################
 fishing_test.insert(len(fishing_test.columns), 'Depleted', 'No')
 # values each year are in the units of TLW -- tons of live weight
 # species are denoted by an abbreviation ex. ANF
-# fishing_two = fishing_two[0:18]
-# del fishing['Unnamed: 15', 'Unnamed: 16']
 
 def log_number_of_species (fishing):
   species_log = len(fishing['Species'].value_counts())
