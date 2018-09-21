@@ -33,7 +33,6 @@ def depletion_breakdown (original, fishing, lower, upper):
     u_count = 0
     for column in fishing:
       # print(column)
-      # print(lower == column, lower)
       # print(l_count)
       if lower == column:
         l_count+=1
@@ -95,8 +94,6 @@ def sum_annual_tlw (fishing, year):
   try:
     count = 0
     for column in fishing:
-      # print(column)
-      # print(lower == column, lower)
       if year == column:
         count+=1
       else:
@@ -123,9 +120,6 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
     l_count = 0
     u_count = 0
     for column in fishing:
-      # print(column)
-      # print(lower == column, lower)
-      # print(l_count)
       if lower == column:
         l_count+=1
       elif upper == column:
@@ -134,10 +128,10 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
         continue
 
     if l_count == 0: 
-      raise KeyError('This is not a valid lower limit Year')
+      raise KeyError('This is not a valid lower limit Year.')
       return
     if u_count == 0:
-      raise KeyError('This is not a valid upper limit Year')
+      raise KeyError('This is not a valid upper limit Year.')
       return
 
   except Exception as error: 
@@ -209,14 +203,41 @@ def detailed_species_depletion (fishing, species):
   print('----------------------------------------------------------------------------')
   main_function()
 
-def area_code_breakdown (fishing, area_code, filter_by_year):
-  # print(fishing)
-  # print(area_code)
-  # print(type (area_code))
-  if filter_by_year != 'none':
-    filtered_area_1 = fishing.loc[fishing['Area'] == area_code, filter_by_year]
-  elif filter_by_year == 'none':
-    filtered_area_1 = fishing.loc[fishing['Area'] == area_code, '2016': '2006']
+def area_code_breakdown (fishing, area_code, lower, upper):
+  try:
+    area_count = 0
+    l_count = 0
+    u_count = 0
+
+    if (fishing['Area'] == area_code).any():
+      area_count+=1 
+
+    for column in fishing:
+      print(column)
+      # print(filter_by_year == column, filter_by_year)
+      # print(year_count)
+      if lower == column:
+        l_count+=1
+      elif upper == column:
+        u_count+=1
+      else:
+        continue
+
+    if area_count == 0: 
+      raise KeyError('This is not a valid Area Code.')
+      return
+    if l_count == 0: 
+      raise KeyError('This is not a valid lower limit Year.')
+      return
+    if u_count == 0:
+      raise KeyError('This is not a valid upper limit Year.')
+      return
+
+  except Exception as error: 
+    print('Caught this error: ' + repr(error))
+    return
+
+  filtered_area_1 = fishing.loc[fishing['Area'] == area_code, upper:lower]
 
   # filtered_species_1.insert(len(filtered_species_1.columns), 'Depleted', 'No')
   # print(filtered_species_1)
@@ -228,7 +249,7 @@ def area_code_breakdown (fishing, area_code, filter_by_year):
   # print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
   for index, row in filtered_area_new.iterrows():
     # print(row, index)
-    if row['2016'] < row['2006']*.799:
+    if row[upper] < row[lower]*.799:
       #.79 value retrieved from Technical Guidance On the Use of Precautionary
       #  Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
@@ -329,10 +350,12 @@ def main_function ():
     print(area_code)
     filter_by_year_question = input('Do you want to filter by Year as well? -- Yes or No  ')
     if(filter_by_year_question == 'Yes'):
-      filter_by_year = input('Enter the year you would like to filter by:  ')
-      area_code_breakdown(fishing_test, area_code, filter_by_year)
+      filter_by_year_lower = input('Enter the lower limit year you would like to filter by:  ')
+      print(filter_by_year_lower)
+      filter_by_year_upper = input('Enter the upper limit year you would like to filter by (inclusive):  ')
+      area_code_breakdown(fishing_test, area_code, filter_by_year_lower, filter_by_year_upper)
     elif(filter_by_year_question == 'No'):
-      area_code_breakdown(fishing_test, area_code, 'none')
+      area_code_breakdown(fishing_test, area_code, '2006', '2016')
   
   if option == 6:
     bar_graph_per_annum_tlw(fishing_test)
