@@ -147,8 +147,12 @@ def depletion_breakdown (original, fishing, lower, upper):
   print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, len(fishing_test)), end='\n\n')
   df = fishing['Species'].value_counts()
   unique_species = len(df)
-  print('There are %d unique fish and shellfish species being caught' % unique_species)
-  print('during this year range by participating European Countries in the Atlantic Northeast.', end='\n\n')
+  lower = int(lower)
+  upper = int(upper)
+  print('You have filtered these entries to years: %d - %d from the original 2006 - 2016.' %(lower, upper))
+  print('This may or may not alter the depleted status of the entries.', end='\n\n')
+  print('There are %d unique fish and shellfish species being caught during this year range' % unique_species)
+  print('by participating European Countries in the Atlantic Northeast.', end='\n\n')
   
   depletion_totals = fishing_test['Depleted'].value_counts()
   
