@@ -142,7 +142,7 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
   upper = int(upper)
   print('----------------------------------------------------------------------------', end='\n\n')
   print('From %d to %d, a total of %.2f TLW fish and shellfish were caught.' % (lower, upper, range_tlw), end='\n\n')
-  main_function()
+  main_function() 
 
 def detailed_species_depletion (fishing, species):
   # print(species)
