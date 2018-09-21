@@ -72,12 +72,18 @@ def depletion_breakdown (original, fishing, lower, upper):
   unique_species = len(df)
   print('There are %d unique species being caught in the Atlantic Northeast based on the year range.' % unique_species, end='\n\n')
   depletion_totals = fishing_test['Depleted'].value_counts()
-  depl_yes = depletion_totals['Yes']
-  depl_no = depletion_totals['No']
-  proportion = depl_yes/(depl_no+depl_yes)
-  percentage = proportion*100
-  print('There are %d entries that are classified as depleted and %d entries that are not -- a proportion'  % (depl_yes, depl_no))
-  print('of %.4f or %.2f%% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.' % (proportion, percentage))
+  if depletion_totals.index.str.contains('Yes').any():
+    depl_yes = int(depletion_totals['Yes'])
+  else:
+    depl_yes = 0
+
+  if depletion_totals.index.str.contains('No').any():
+    depl_no = int(depletion_totals['No'])
+  else:
+    depl_no = 0
+  percentage = (depl_yes/(depl_no+depl_yes))*100
+  print('There are %d entries that are classified as depleted and %d entries that are not -- a percentage'  % (depl_yes, depl_no))
+  print('of %.2f%% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.' % percentage)
   print('----------------------------------------------------------------------------', end='\n\n')
   main_function()
   #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
@@ -128,8 +134,15 @@ def detailed_species_depletion (fishing, species):
   print('---- After Analysis ----')
   print(tabulate(filtered_species_new, headers='keys', tablefmt='grid'), end='\n\n')
   depletion_totals = filtered_species_new['Depleted'].value_counts()
-  depl_yes = depletion_totals['Yes']
-  depl_no = depletion_totals['No']
+  if depletion_totals.index.str.contains('Yes').any():
+    depl_yes = int(depletion_totals['Yes'])
+  else:
+    depl_yes = 0
+
+  if depletion_totals.index.str.contains('No').any():
+    depl_no = int(depletion_totals['No'])
+  else:
+    depl_no = 0
   proportion = depl_yes/(depl_no+depl_yes)
   percentage = proportion*100
   print('Based on data analysis, this species -- %s -- shows depleted status on %.2f%% of the areas it is fished in \n the past decade, from 2006 to 2016.'  % (species, percentage))
@@ -240,8 +253,5 @@ main_function()
 
 #   #contains all of the functions and runs conditionally based on your decision
 #menu on the gui/terminal to select functions you want to run
-# do analysis on the years 
-# add 2 more functions
-# add a menu to choose a function
 # modularize
 # add matplotlib 
