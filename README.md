@@ -28,6 +28,13 @@
 
   Users can display a bar graph of each years annual TLW from 2006 to 2016 of the entire Dataset.
 
+  ## Report Conclusions
+  Through analysis with the help of python, it was determined that there are 3487 entries that are classified as depleted and another 3856 entries that are not out of the 7,343 examined. This evaluates to a percentage of 47.49% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.
+
+  Bear in mind that this does NOT include other nations that may or may not be fishing in these waters as well -- this ONLY utilizes ICES data compiled from 20 participating European countries. 
+
+  This also does not take into account other sources of environmental degradation that pose varying levels of stress to the marine environment like trawling, microplastics, oil, and chemical contamination including but not limited to carbon dioxide (CO2), volatile organic compounds (VOCs), chlorofluorocarbons (CFCs), and heavy metals like lead (Pb) and mercury (Hg).
+
   ![Bar Graph](./BarGraphSubset.png)
 
   This is a Bar Graph generated via matplotlib function #7, using a small subset of the data entries (6).
