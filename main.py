@@ -22,8 +22,45 @@ fishing_test.insert(len(fishing_test.columns), 'Depleted', 'No')
 # fishing_two = fishing_two[0:18]
 # del fishing['Unnamed: 15', 'Unnamed: 16']
 
+def log_number_of_species (fishing):
+  species_log = len(fishing['Species'].value_counts())
+  #Output
+  print('----------------------------------------------------------------------------')
+  print('Analysis:', end='\n\n')
+  print('A total of %d unique fish and shellfish species were caught and recorded in the 2006-2016 ' % (species_log), end='\n\n')
+  print('ICES Nominal Catch Dataset by participating European Countries in the Altantic Northeast.')
+  print('----------------------------------------------------------------------------')
+  main_function()
+
+
+def sum_annual_tlw (fishing, year):
+  try:
+    count = 0
+    for column in fishing:
+      if year == column:
+        count+=1
+      else:
+        continue
+
+    if count == 0: 
+      raise KeyError('This is not a valid Year.')
+      return
+
+  except Exception as error: 
+    print('Caught this error: ' + repr(error))
+    return
+
+  tlw_annual = fishing[year].sum()
+  year = int(year)
+  #Output
+  print('----------------------------------------------------------------------------')
+  print('Analysis:', end='\n\n')
+  print('In %d, there was a total of %.2f TLW (tons live weight) fish and shellfish caught in the Northeast Atlantic.' % (year, tlw_annual), end='\n\n')
+  print('----------------------------------------------------------------------------')
+  main_function()
+
+
 def depletion_breakdown (original, fishing, lower, upper): 
-  
   try:
     l_count = 0
     u_count = 0
@@ -68,7 +105,8 @@ def depletion_breakdown (original, fishing, lower, upper):
   print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, len(fishing_test)), end='\n\n')
   df = fishing['Species'].value_counts()
   unique_species = len(df)
-  print('There are %d unique species being caught in the Atlantic Northeast based on the year range.' % unique_species, end='\n\n')
+  print('There are %d unique fish and shellfish species being caught' % unique_species)
+  print('during this year range by participating European Countries in the Atlantic Northeast.', end='\n\n')
   depletion_totals = fishing_test['Depleted'].value_counts()
   if depletion_totals.index.str.contains('Yes').any():
     depl_yes = int(depletion_totals['Yes'])
@@ -86,31 +124,6 @@ def depletion_breakdown (original, fishing, lower, upper):
   main_function()
   #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
 
-def sum_annual_tlw (fishing, year):
-  try:
-    count = 0
-    for column in fishing:
-      if year == column:
-        count+=1
-      else:
-        continue
-
-    if count == 0: 
-      raise KeyError('This is not a valid Year.')
-      return
-
-  except Exception as error: 
-    print('Caught this error: ' + repr(error))
-    return
-
-  tlw_annual = fishing[year].sum()
-  year = int(year)
-  #Output
-  print('----------------------------------------------------------------------------')
-  print('Analysis:', end='\n\n')
-  print('In %d, there was a total of %.2f TLW (tons live weight) fish and shellfish caught in the Northeast Atlantic.' % (year, tlw_annual), end='\n\n')
-  print('----------------------------------------------------------------------------')
-  main_function()
 
 def sum_aggregate_tlw_range (fishing, lower, upper):
   try:
@@ -144,6 +157,7 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
   print('From %d to %d, a total of %.2f TLW fish and shellfish were caught.' % (lower, upper, range_tlw), end='\n\n')
   print('----------------------------------------------------------------------------')
   main_function() 
+
 
 def detailed_species_depletion (fishing, species):
   try:
@@ -199,6 +213,7 @@ def detailed_species_depletion (fishing, species):
   print('----------------------------------------------------------------------------')
   main_function()
 
+
 def area_code_breakdown (fishing, area_code, lower, upper):
   try:
     area_count = 0
@@ -209,7 +224,7 @@ def area_code_breakdown (fishing, area_code, lower, upper):
       area_count+=1 
 
     for column in fishing:
-      print(column)
+      # print(column)
       if lower == column:
         l_count+=1
       elif upper == column:
@@ -268,6 +283,7 @@ def area_code_breakdown (fishing, area_code, lower, upper):
   print('----------------------------------------------------------------------------')
   main_function()
 
+
 def bar_graph_per_annum_tlw (fishing):
   years = fishing.columns[3:14]
   sum_each_year = fishing[:].sum().values[3:14]
@@ -289,22 +305,28 @@ def bar_graph_per_annum_tlw (fishing):
   for a,b in enumerate(sum_new):
     plt.text(a, b, str(b), fontsize=9, horizontalalignment='center')
   plt.show()
-  # plt.save("somefile.png")
+  # plt.savefig("BarGraphOf6.png") saved in the program
   main_function()
-  
+
+
+def analyzing_in_progress ():
+  print('Analyzing...', end='\n\n')
+  print('3... 2... 1...', end='\n\n')
+
 
 def main_function ():
   #Menu
   print('|==========================================================================|')
   print('Available Functions:', end='\n\n')
   print('Numerical Analysis:', end='\n\n')
-  print('Enter 1 to Determine Total Annual Catch for a Year.')
-  print('Enter 2 to Determine Aggregate Catch for a Range of Years.')
-  print('Enter 3 to do Quantitative Analysis of the Health of Fishery Stocks.')
-  print('Enter 4 to do Quantitative Analysis of the Health of a Specific Fish Species.')
-  print('Enter 5 to do Quantitative Analysis of the Health in a specific Area Code', end='\n\n')
+  print('Enter 1 to Analyze the Number of Species being recorded.')
+  print('Enter 2 to Determine Total Annual Catch for a Year.')
+  print('Enter 3 to Determine Aggregate Catch for a Range of Years.')
+  print('Enter 4 to do Quantitative Analysis of the Health of Fishery Stocks.')
+  print('Enter 5 to do Quantitative Analysis of the Health of a Specific Fish Species.')
+  print('Enter 6 to do Quantitative Analysis of the Health in a specific Area Code', end='\n\n')
   print('Graphical Representation:', end='\n\n')
-  print('Enter 6 to Display a Bar Graph of each Years Annual TLW from 2006 to 2016.')
+  print('Enter 7 to Display a Bar Graph of each Years Annual TLW from 2006 to 2016.')
   print('Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
   print('|==========================================================================|')
   
@@ -312,30 +334,38 @@ def main_function ():
   option = int(option)
   # print(option)
   if option == 1:
-    enter_year = input('Enter in a year to sum up:  ')
-    # print(enter_year)
-    sum_annual_tlw(fishing_test, enter_year)
+    analyzing_in_progress()
+    log_number_of_species(fishing)
 
   if option == 2:
+    enter_year = input('Enter in a year to sum up:  ')
+    print(enter_year)
+    analyzing_in_progress()
+    sum_annual_tlw(fishing_test, enter_year)
+
+  if option == 3:
     lower_limit = input('Enter in the lower limit year to aggregate:  ')
     print(lower_limit)
     upper_limit = input('Enter in the upper limit year to aggregate (inclusive):  ')
     print(upper_limit)
+    analyzing_in_progress()
     sum_aggregate_tlw_range(fishing_test, lower_limit, upper_limit)
 
-  if option == 3:
+  if option == 4:
     lower_limit = input('Enter in the lower limit year to analyze:  ')
     print(lower_limit)
     upper_limit = input('Enter in the upper limit year to analyze:  ')
     print(upper_limit)
+    analyzing_in_progress()
     depletion_breakdown(fishing, fishing_test, lower_limit, upper_limit)
 
-  if option == 4:
+  if option == 5:
     species_abbrev = input('Enter in a species abbreviation to analyze:  ')
     print(species_abbrev)
+    analyzing_in_progress()
     detailed_species_depletion(fishing_test, species_abbrev)
   
-  if option == 5:
+  if option == 6:
     area_code = input('Enter in an area code to analyze:  ')
     print(area_code)
     filter_by_year_question = input('Do you want to filter by Year as well? -- Yes or No  ')
@@ -343,11 +373,14 @@ def main_function ():
       filter_by_year_lower = input('Enter the lower limit year you would like to filter by:  ')
       print(filter_by_year_lower)
       filter_by_year_upper = input('Enter the upper limit year you would like to filter by (inclusive):  ')
+      print(filter_by_year_upper)
+      analyzing_in_progress()
       area_code_breakdown(fishing_test, area_code, filter_by_year_lower, filter_by_year_upper)
     elif(filter_by_year_question == 'No'):
+      analyzing_in_progress()
       area_code_breakdown(fishing_test, area_code, '2006', '2016')
   
-  if option == 6:
+  if option == 7:
     bar_graph_per_annum_tlw(fishing_test)
 
   if option == 0:
