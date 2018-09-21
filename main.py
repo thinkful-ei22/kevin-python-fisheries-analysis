@@ -12,7 +12,6 @@ fishing = fishing[['Species', 'Area', 'Country',
 
 fishing_data = fishing.dropna(axis='rows')
 fishing_data = fishing_data[(fishing_data != 0).all(1)]
-
 fishing_test = fishing_data[8:14]
 fishing_test.insert(len(fishing_test.columns), 'Depleted', 'No')
 # values each year are in the units of TLW -- tons of live weight
@@ -65,7 +64,8 @@ def depletion_breakdown (original, fishing, lower, upper):
       # print('yes')
       fishing.at[index, 'Depleted'] = 'Yes'
   
-  print(tabulate(fishing_test, headers='keys', tablefmt='grid'))
+  print(tabulate(fishing, headers='keys', tablefmt='grid'))
+  
   original_data = len(original)
   print('There are %d total entries in the 2006-2016 ICES Nominal Catch Dataset.' % original_data, end='\n\n')
   filtered_data = len(fishing_data)
@@ -78,13 +78,11 @@ def depletion_breakdown (original, fishing, lower, upper):
   depl_no = depletion_totals['No']
   proportion = depl_yes/(depl_no+depl_yes)
   percentage = proportion*100
-  print('There are %d entries that are classified as depleted and %d entries that are not'  % (depl_yes, depl_no))
-  print('-- a proportion of %.4f or %.2f%% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.' % (proportion, percentage))
+  print('There are %d entries that are classified as depleted and %d entries that are not -- a proportion'  % (depl_yes, depl_no))
+  print('of %.4f or %.2f%% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.' % (proportion, percentage))
   print('----------------------------------------------------------------------------', end='\n\n')
   main_function()
   #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
-
-# def detailed_species_depletion ():
 
 def sum_annual_tlw (fishing, column):
   # console_break = print('----------------------------------------------------------------------------', end='\n\n')
@@ -93,6 +91,47 @@ def sum_annual_tlw (fishing, column):
   column = int(column)
   print('----------------------------------------------------------------------------', end='\n\n')
   print('In %d, there was a total of %.2f TLW (tons live weight) fish and shellfish caught.' % (column, tlw_annual), end='\n\n')
+  print('----------------------------------------------------------------------------', end='\n\n')
+  main_function()
+
+def sum_aggregate_tlw_range (fishing, lower, upper):
+  print(lower)
+  print(upper)
+  range_tlw = fishing.loc[:, upper:lower].sum(axis=1).sum()
+  lower = int(lower)
+  upper = int(upper)
+  print('----------------------------------------------------------------------------', end='\n\n')
+  print('From %d to %d, a total of %.2f TLW was caught.' % (lower, upper, range_tlw), end='\n\n')
+  
+  main_function()
+
+def detailed_species_depletion (fishing, species):
+  # print(species)
+  # print(type (species))
+  filtered_species = fishing.loc[fishing['Species'] == species, '2016': '2006']
+  filtered_species.insert(len(filtered_species.columns), 'Depleted', 'No')
+  print(filtered_species)
+  for index, row in filtered_species.iterrows():
+    # print(row)
+    # print(row['2016'])
+    # print(index)
+    # print(row[2])
+    # print(row[2] < row[12] * .7)
+    if row['2016'] < row['2006']*.799:
+      #.79 value retrieved from Technical Guidance On the Use of Precautionary
+      #  Approaches to Implementing National Standard 1 of the
+      # Magnuson-Stevens Fishery Conservation and Management Act 1998
+      # print('yes')
+      filtered_species.at[index, 'Depleted'] = 'Yes'
+
+  print(tabulate(filtered_species, headers='keys', tablefmt='grid'), end='\n\n')
+  depletion_totals = filtered_species['Depleted'].value_counts()
+  depl_yes = depletion_totals['Yes']
+  depl_no = depletion_totals['No']
+  proportion = depl_yes/(depl_no+depl_yes)
+  percentage = proportion*100
+  print('Based on data analysis, this species -- %s -- shows depleted status on %.2f%% of the areas it is fished in \n the past decade, from 2006 to 2016.'  % (species, percentage))
+  print('This is based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.', end='\n\n')
   print('----------------------------------------------------------------------------', end='\n\n')
   main_function()
 
@@ -111,9 +150,10 @@ def sum_annual_tlw (fishing, column):
 def main_function ():
   print('Available Functions:', end='\n\n')
   print('Numerical Analysis:', end='\n\n')
-  print('Enter 1 to Determine Total Annual Catch for a Year', end='\n\n')
-  print('Enter 2 to Determine Total Annual Catch for a Range of Years', end='\n\n')
-  print('Enter 3 to do Quantitative Analysis of the Health of Fishery Stocks', end='\n\n')
+  print('Enter 1 to Determine Total Annual Catch for a Year.')
+  print('Enter 2 to Determine Aggregate Catch for a Range of Years.')
+  print('Enter 3 to do Quantitative Analysis of the Health of Fishery Stocks.')
+  print('Enter 4 to do Quantitative Analysis of the Health of a Specific Fish Species.')
   print('Graphical Representation:', end='\n\n')
   print('Pie Chart', end='\n\n')
   
@@ -125,12 +165,24 @@ def main_function ():
     # print(enter_year)
     sum_annual_tlw(fishing_test, enter_year)
 
+  if(option == 2):
+    lower_limit = input('Enter in the lower limit year to aggregate:  ')
+    print(lower_limit)
+    upper_limit = input('Enter in the upper limit year to aggregate (inclusive):  ')
+    print(upper_limit)
+    sum_aggregate_tlw_range(fishing_test, lower_limit, upper_limit)
+
   if(option == 3):
     lower_limit = input('Enter in the lower limit year to analyze:  ')
     print(lower_limit)
     upper_limit = input('Enter in the upper limit year to analyze:  ')
     print(upper_limit)
     depletion_breakdown(fishing, fishing_test, lower_limit, upper_limit)
+
+  if(option == 4):
+    species_abbrev = input('Enter in a species abbreviation to analyze:  ')
+    print(species_abbrev)
+    detailed_species_depletion(fishing_test, species_abbrev)
 
   if(option == 0):
     exit()
