@@ -14,9 +14,13 @@
 
   Users can also sign up to post a new listing to the database by registering. Posting to the database is a protected endpoint as is updating and deleting, which have yet to be implemented but is seen to be used by admins in the future. 
 
-  ![Bar Graph](./BarGraphOf7.png)
+  ![Bar Graph](./BarGraphSubset.png)
 
-  This is a Bar Graph generated via matplotlib function #7.
+  This is a Bar Graph generated via matplotlib function #7, using a small subset of the data entries (6).
+
+  ![Bar Graph](./BarGraphAllEntries.png)
+
+  This is a Bar Graph generated via matplotlib function #7 using all of the 7343 entries containing non-zero values.
 
   React and Redux are used on the front-end (with Create React-App and Buildpack for Heroku).
   NodeJS and as well as Mongoose and Express are used on the back-end with MongoDB as the database storage. 
