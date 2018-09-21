@@ -119,32 +119,29 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
     for column in fishing:
       # print(column)
       # print(lower == column, lower)
+      # print(l_count)
       if lower == column:
         l_count+=1
-      else:
-        continue
-
-      if l_count == 0: 
-        raise KeyError('This is not a valid lower limit Year')
-
-      if upper == column:
+      elif upper == column:
         u_count+=1
-        break
-        return
       else:
         continue
 
-      if u_count == 0:
-        raise KeyError('This is not a valid upper limit Year')
-        return
+    if l_count == 0: 
+      raise KeyError('This is not a valid lower limit Year')
+      return
+    if u_count == 0:
+      raise KeyError('This is not a valid upper limit Year')
+      return
   except Exception as error: 
     print('Caught this error: ' + repr(error))
+    return
 
   range_tlw = fishing.loc[:, upper:lower].sum(axis=1).sum()
   lower = int(lower)
   upper = int(upper)
   print('----------------------------------------------------------------------------', end='\n\n')
-  print('From %d to %d, a total of %.2f TLW was caught.' % (lower, upper, range_tlw), end='\n\n')
+  print('From %d to %d, a total of %.2f TLW fish and shellfish were caught.' % (lower, upper, range_tlw), end='\n\n')
   main_function()
 
 def detailed_species_depletion (fishing, species):
