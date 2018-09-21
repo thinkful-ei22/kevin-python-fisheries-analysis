@@ -6,6 +6,8 @@
 
   This project is built on the programming language, Python, in collaboration with pandas DataFrames, numpy, tabulate, and matplot primarily.
 
+  As a note of importance, entries have been filtered out from the original data set because many contain zero entries. As a result, the original 52,517 entries have been reduced down to 7,343. This large reduction in entries is quite possibly due to a rarity/scarcity of some species in some waters.
+
   Interaction with the program is done through the python terminal. An interactive menu will prompt you to choose a function and once completed, you can begin to run another. 
 
   If an incorrect input is received -- ie. invalid -- the user will be prompted of where the error occurred and the program will exit immediately. 
