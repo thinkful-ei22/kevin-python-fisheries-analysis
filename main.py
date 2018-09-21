@@ -90,7 +90,7 @@ def sum_annual_tlw (fishing, column):
   tlw_annual = fishing[column].sum()
   column = int(column)
   print('----------------------------------------------------------------------------', end='\n\n')
-  print('In %d, there was a total of %.2f TLW (tons live weight) fish and shellfish caught.' % (column, tlw_annual), end='\n\n')
+  print('In %d, there was a total of %.2f TLW (tons live weight) fish and shellfish caught in the Northeast Atlantic.' % (column, tlw_annual), end='\n\n')
   print('----------------------------------------------------------------------------', end='\n\n')
   main_function()
 
@@ -102,7 +102,6 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
   upper = int(upper)
   print('----------------------------------------------------------------------------', end='\n\n')
   print('From %d to %d, a total of %.2f TLW was caught.' % (lower, upper, range_tlw), end='\n\n')
-  
   main_function()
 
 def detailed_species_depletion (fishing, species):
@@ -110,7 +109,9 @@ def detailed_species_depletion (fishing, species):
   # print(type (species))
   filtered_species = fishing.loc[fishing['Species'] == species, '2016': '2006']
   filtered_species.insert(len(filtered_species.columns), 'Depleted', 'No')
-  print(filtered_species)
+  print('---- Before Analysis ----')
+  print(tabulate(filtered_species, headers='keys', tablefmt='grid'), end='\n\n')
+
   for index, row in filtered_species.iterrows():
     # print(row)
     # print(row['2016'])
@@ -124,6 +125,7 @@ def detailed_species_depletion (fishing, species):
       # print('yes')
       filtered_species.at[index, 'Depleted'] = 'Yes'
 
+  print('---- After Analysis ----')
   print(tabulate(filtered_species, headers='keys', tablefmt='grid'), end='\n\n')
   depletion_totals = filtered_species['Depleted'].value_counts()
   depl_yes = depletion_totals['Yes']
@@ -135,17 +137,6 @@ def detailed_species_depletion (fishing, species):
   print('----------------------------------------------------------------------------', end='\n\n')
   main_function()
 
-# lower_limit = input('Enter in the lower limit year to analyze:  ')
-# print(lower_limit)
-# upper_limit = input('Enter in the upper limit year to analyze:  ')
-# print(upper_limit)
-
-# depletion_breakdown(fishing, fishing_test, lower_limit, upper_limit)
-
-# enter_year = input('Enter in a year to sum up:  ')
-# print(enter_year)
-
-# sum_annual_tlw(fishing_test, enter_year)
 
 def main_function ():
   print('Available Functions:', end='\n\n')
@@ -153,9 +144,10 @@ def main_function ():
   print('Enter 1 to Determine Total Annual Catch for a Year.')
   print('Enter 2 to Determine Aggregate Catch for a Range of Years.')
   print('Enter 3 to do Quantitative Analysis of the Health of Fishery Stocks.')
-  print('Enter 4 to do Quantitative Analysis of the Health of a Specific Fish Species.')
+  print('Enter 4 to do Quantitative Analysis of the Health of a Specific Fish Species.', end='\n\n')
   print('Graphical Representation:', end='\n\n')
-  print('Pie Chart', end='\n\n')
+  print('Bar Graph of each Years Annual TLW from 2006 to 2016.')
+  print('Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
   
   option = input('Enter in an option to run an analytical function (or 0 to exit):  ')
   option = int(option)
