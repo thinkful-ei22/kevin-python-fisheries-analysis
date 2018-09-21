@@ -189,9 +189,9 @@ def detailed_species_depletion (fishing, species):
     return
 
   filtered_species_1 = fishing.loc[fishing['Species'] == species, '2016': '2006']
-  # print(filtered_species_1)
+
   filtered_species_2 = fishing.loc[:, ['Depleted', 'Area', 'Country', 'Species']]
-  # print(filtered_species_2)
+ 
   filtered_species_new = pd.concat([filtered_species_1, filtered_species_2], axis=1)
   filtered_species_new = filtered_species_new.dropna(axis='rows')
   
@@ -241,7 +241,6 @@ def area_code_breakdown (fishing, area_code, lower, upper):
       area_count+=1 
 
     for column in fishing:
-      # print(column)
       if lower == column:
         l_count+=1
       elif upper == column:
@@ -265,9 +264,8 @@ def area_code_breakdown (fishing, area_code, lower, upper):
 
   filtered_area_1 = fishing.loc[fishing['Area'] == area_code, upper:lower]
 
-  # print(filtered_area_1)
   filtered_area_2 = fishing.loc[:, ['Depleted', 'Country', 'Species', 'Area']]
-  # print(filtered_area_2)
+
   filtered_area_new = pd.concat([filtered_area_1, filtered_area_2], axis=1)
 
   filtered_area_new = filtered_area_new.dropna(axis='rows')
@@ -313,7 +311,6 @@ def bar_graph_per_annum_tlw (fishing):
   sum_new = []
 
   for x,y in enumerate(sum_each_year):
-    # print(y)
     y = math.floor(y)
     sum_new.append(y)
 
