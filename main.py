@@ -63,8 +63,11 @@ def depletion_breakdown (original, fishing, lower, upper):
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
       # print('yes')
       fishing.at[index, 'Depleted'] = 'Yes'
-  
-  print(tabulate(fishing, headers='keys', tablefmt='grid'))
+  # print(fishing)
+  fishing_new_1 = fishing.loc[:, upper:lower]
+  fishing_new_2 = fishing.loc[:, ['Depleted', 'Area', 'Species', 'Country']]
+  fishing_new_new = pd.concat([fishing_new_1, fishing_new_2], axis=1)
+  print(tabulate(fishing_new_new, headers='keys', tablefmt='grid'))
   
   original_data = len(original)
   print('There are %d total entries in the 2006-2016 ICES Nominal Catch Dataset.' % original_data, end='\n\n')
@@ -107,12 +110,19 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
 def detailed_species_depletion (fishing, species):
   # print(species)
   # print(type (species))
-  filtered_species = fishing.loc[fishing['Species'] == species, '2016': '2006']
-  filtered_species.insert(len(filtered_species.columns), 'Depleted', 'No')
+  print(fishing)
+  filtered_species_1 = fishing.loc[fishing['Species'] == species, '2016': '2006']
+  # filtered_species_1.insert(len(filtered_species_1.columns), 'Depleted', 'No')
+  # print(filtered_species_1)
+  filtered_species_2 = fishing.loc[:, ['Depleted', 'Area', 'Country', 'Species']]
+  # print(filtered_species_2)
+  filtered_species_new = pd.concat([filtered_species_1, filtered_species_2], axis=1)
+  filtered_species_new = filtered_species_new.dropna(axis='rows')
+  
   print('---- Before Analysis ----')
-  print(tabulate(filtered_species, headers='keys', tablefmt='grid'), end='\n\n')
+  print(tabulate(filtered_species_new, headers='keys', tablefmt='grid'), end='\n\n')
 
-  for index, row in filtered_species.iterrows():
+  for index, row in filtered_species_new.iterrows():
     # print(row)
     # print(row['2016'])
     # print(index)
@@ -123,11 +133,11 @@ def detailed_species_depletion (fishing, species):
       #  Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
       # print('yes')
-      filtered_species.at[index, 'Depleted'] = 'Yes'
+      filtered_species_new.at[index, 'Depleted'] = 'Yes'
 
   print('---- After Analysis ----')
-  print(tabulate(filtered_species, headers='keys', tablefmt='grid'), end='\n\n')
-  depletion_totals = filtered_species['Depleted'].value_counts()
+  print(tabulate(filtered_species_new, headers='keys', tablefmt='grid'), end='\n\n')
+  depletion_totals = filtered_species_new['Depleted'].value_counts()
   depl_yes = depletion_totals['Yes']
   depl_no = depletion_totals['No']
   proportion = depl_yes/(depl_no+depl_yes)
@@ -137,6 +147,57 @@ def detailed_species_depletion (fishing, species):
   print('----------------------------------------------------------------------------', end='\n\n')
   main_function()
 
+def area_code_breakdown (fishing, area_code, filter_by_year):
+  print(fishing)
+  print(area_code)
+  print(type (area_code))
+  if filter_by_year != 'none':
+    filtered_area_1 = fishing.loc[fishing['Area'] == area_code, filter_by_year]
+  elif filter_by_year == 'none':
+    filtered_area_1 = fishing.loc[fishing['Area'] == area_code, '2016': '2006']
+
+  # filtered_species_1.insert(len(filtered_species_1.columns), 'Depleted', 'No')
+  # print(filtered_species_1)
+  filtered_area_2 = fishing.loc[:, ['Depleted', 'Country', 'Species', 'Area']]
+  # print(filtered_species_2)
+  filtered_area_new = pd.concat([filtered_area_1, filtered_area_2], axis=1)
+  filtered_area_new = filtered_area_new.dropna(axis='rows')
+  # filtered_area.insert(len(filtered_area.columns), 'Depleted', 'No')
+  print('---- Before Analysis ----')
+  print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
+  for index, row in filtered_area_new.iterrows():
+    # print(row)
+    # print(row['2016'])
+    # print(index)
+    # print(row[2])
+    # print(row[2] < row[12] * .7)
+    if row['2016'] < row['2006']*.799:
+      #.79 value retrieved from Technical Guidance On the Use of Precautionary
+      #  Approaches to Implementing National Standard 1 of the
+      # Magnuson-Stevens Fishery Conservation and Management Act 1998
+      # print('yes')
+      filtered_area_new.at[index, 'Depleted'] = 'Yes'
+
+  print('---- After Analysis ----')
+  print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
+  depletion_totals = filtered_area_new['Depleted'].value_counts()
+  print(depletion_totals)
+  print(depletion_totals['Yes'])
+  # print(depletion_totals['No'])
+  if depletion_totals.index.str.contains('Yes').any():
+    depl_yes = int(depletion_totals['Yes'])
+  else:
+    depl_yes = 0
+
+  if depletion_totals.index.str.contains('No').any():
+    depl_no = int(depletion_totals['No'])
+  else:
+    depl_no = 0
+  percentage = (depl_yes/(depl_no+depl_yes))*100
+  print('Based on data analysis, this area code -- %s -- shows depleted status on %.2f%% of the entries it is fished in \n the past decade, from 2006 to 2016.'  % (area_code, percentage))
+  print('This is based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.', end='\n\n')
+  print('----------------------------------------------------------------------------', end='\n\n')
+  main_function()
 
 def main_function ():
   print('Available Functions:', end='\n\n')
@@ -144,7 +205,8 @@ def main_function ():
   print('Enter 1 to Determine Total Annual Catch for a Year.')
   print('Enter 2 to Determine Aggregate Catch for a Range of Years.')
   print('Enter 3 to do Quantitative Analysis of the Health of Fishery Stocks.')
-  print('Enter 4 to do Quantitative Analysis of the Health of a Specific Fish Species.', end='\n\n')
+  print('Enter 4 to do Quantitative Analysis of the Health of a Specific Fish Species.')
+  print('Enter 5 to do Quantitative Analysis of the Health in a specific Area Code', end='\n\n')
   print('Graphical Representation:', end='\n\n')
   print('Bar Graph of each Years Annual TLW from 2006 to 2016.')
   print('Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
@@ -175,6 +237,16 @@ def main_function ():
     species_abbrev = input('Enter in a species abbreviation to analyze:  ')
     print(species_abbrev)
     detailed_species_depletion(fishing_test, species_abbrev)
+  
+  if(option == 5):
+    area_code = input('Enter in an area code to analyze:  ')
+    print(area_code)
+    filter_by_year_question = input('Do you want to filter by Year as well? -- Yes or No  ')
+    if(filter_by_year_question == 'Yes'):
+      filter_by_year = input('Enter the year you would like to filter by:  ')
+      area_code_breakdown(fishing_test, area_code, filter_by_year)
+    elif(filter_by_year_question == 'No'):
+      area_code_breakdown(fishing_test, area_code, 'none')
 
   if(option == 0):
     exit()
