@@ -1,4 +1,6 @@
 import pandas as pd
+import numpy as np
+import math
 import matplotlib.pyplot as plt 
 from tabulate import tabulate
 
@@ -29,8 +31,8 @@ def depletion_breakdown (original, fishing, lower, upper):
     l_count = 0
     u_count = 0
     for column in fishing:
-      print(column)
-      print(lower == column, lower)
+      # print(column)
+      # print(lower == column, lower)
       if lower == column:
         l_count+=1
       else:
@@ -231,6 +233,33 @@ def area_code_breakdown (fishing, area_code, filter_by_year):
   print('----------------------------------------------------------------------------', end='\n\n')
   main_function()
 
+def bar_graph_per_annum_tlw (fishing):
+  # print(tabulate(fishing, headers='keys', tablefmt='grid'))
+  years = fishing.columns[3:14]
+  # print(fishing[:].sum())
+  sum_each_year = fishing[:].sum().values[3:14]
+  print(sum_each_year)
+  sum_new = []
+  for x,y in enumerate(sum_each_year):
+    print(y)
+    y = math.floor(y)
+    sum_new.append(y)
+
+  # print(sum_new)
+  # year_annum = sum_everything.loc[3:14]
+  # years = fishing.loc()
+  y_pos = np.arange(len(years))
+  plt.bar(y_pos, sum_new)
+  plt.xticks(y_pos, years)
+  plt.ylabel('Tons of Live Weight (TLW)')
+  plt.xlabel('Year')
+  plt.title('Aggregated Catch Data per Annum in Northeast Atlantic from 2006-2016')
+  for a,b in enumerate(sum_new):
+    plt.text(a, b, str(b), fontsize=10, horizontalalignment='center')
+  plt.show()
+  main_function()
+  
+
 def main_function ():
   print('Available Functions:', end='\n\n')
   print('Numerical Analysis:', end='\n\n')
@@ -240,7 +269,7 @@ def main_function ():
   print('Enter 4 to do Quantitative Analysis of the Health of a Specific Fish Species.')
   print('Enter 5 to do Quantitative Analysis of the Health in a specific Area Code', end='\n\n')
   print('Graphical Representation:', end='\n\n')
-  print('Bar Graph of each Years Annual TLW from 2006 to 2016.')
+  print('Enter 6 to Display a Bar Graph of each Years Annual TLW from 2006 to 2016.')
   print('Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
   
   option = input('Enter in an option to run an analytical function (or 0 to exit):  ')
@@ -279,6 +308,9 @@ def main_function ():
       area_code_breakdown(fishing_test, area_code, filter_by_year)
     elif(filter_by_year_question == 'No'):
       area_code_breakdown(fishing_test, area_code, 'none')
+  
+  if option == 6:
+    bar_graph_per_annum_tlw(fishing_test)
 
   if option == 0:
     exit()
