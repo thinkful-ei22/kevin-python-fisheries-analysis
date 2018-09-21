@@ -19,12 +19,8 @@ fishing_test = fishing_data[8:14]
 fishing_test.insert(len(fishing_test.columns), 'Depleted', 'No')
 # values each year are in the units of TLW -- tons of live weight
 # species are denoted by an abbreviation ex. ANF
-
 # fishing_two = fishing_two[0:18]
-# fishing=fishing.replace(nan,0)
 # del fishing['Unnamed: 15', 'Unnamed: 16']
-# print(fishing[['Unnamed: 23']])
-# print(tabulate(fishing_two, headers='keys', tablefmt='grid'))
 
 def depletion_breakdown (original, fishing, lower, upper): 
   
@@ -54,11 +50,11 @@ def depletion_breakdown (original, fishing, lower, upper):
   for index, row in fishing.iterrows():
     # print(row, index)
     if row[upper] < row[lower]*.799:
-      #.79 value retrieved from Technical Guidance On the Use of Precautionary
-      #  Approaches to Implementing National Standard 1 of the
+      #.799 value retrieved from Technical Guidance On the Use of Precautionary
+      # Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
       fishing.at[index, 'Depleted'] = 'Yes'
-  # print(fishing)
+
   fishing_new_1 = fishing.loc[:, upper:lower]
   fishing_new_2 = fishing.loc[:, ['Depleted', 'Area', 'Species', 'Country']]
   fishing_new_new = pd.concat([fishing_new_1, fishing_new_2], axis=1)
@@ -109,6 +105,7 @@ def sum_annual_tlw (fishing, year):
 
   tlw_annual = fishing[year].sum()
   year = int(year)
+  #Output
   print('----------------------------------------------------------------------------')
   print('Analysis:', end='\n\n')
   print('In %d, there was a total of %.2f TLW (tons live weight) fish and shellfish caught in the Northeast Atlantic.' % (year, tlw_annual), end='\n\n')
@@ -141,6 +138,7 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
   range_tlw = fishing.loc[:, upper:lower].sum(axis=1).sum()
   lower = int(lower)
   upper = int(upper)
+  #Output
   print('----------------------------------------------------------------------------')
   print('Analysis:', end='\n\n')
   print('From %d to %d, a total of %.2f TLW fish and shellfish were caught.' % (lower, upper, range_tlw), end='\n\n')
@@ -161,8 +159,7 @@ def detailed_species_depletion (fishing, species):
     print('Caught this error: ' + repr(error))
     return
 
-  # print(species)
-  # print(type (species))
+  # print(species, type(species))
   # print(fishing)
   filtered_species_1 = fishing.loc[fishing['Species'] == species, '2016': '2006']
   # print(filtered_species_1)
@@ -176,12 +173,12 @@ def detailed_species_depletion (fishing, species):
   for index, row in filtered_species_new.iterrows():
     # print(row, index)
     if row['2016'] < row['2006']*.799:
-      #.79 value retrieved from Technical Guidance On the Use of Precautionary
-      #  Approaches to Implementing National Standard 1 of the
+      #.799 value retrieved from Technical Guidance On the Use of Precautionary
+      # Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
       filtered_species_new.at[index, 'Depleted'] = 'Yes'
 
-  # print('---- After Analysis ----')
+  #Output
   print('----------------------------------------------------------------------------')
   print('Analysis:', end='\n\n')
   print(tabulate(filtered_species_new, headers='keys', tablefmt='grid'), end='\n\n')
@@ -213,8 +210,6 @@ def area_code_breakdown (fishing, area_code, lower, upper):
 
     for column in fishing:
       print(column)
-      # print(filter_by_year == column, filter_by_year)
-      # print(year_count)
       if lower == column:
         l_count+=1
       elif upper == column:
@@ -247,17 +242,17 @@ def area_code_breakdown (fishing, area_code, lower, upper):
   for index, row in filtered_area_new.iterrows():
     # print(row, index)
     if row[upper] < row[lower]*.799:
-      #.79 value retrieved from Technical Guidance On the Use of Precautionary
-      #  Approaches to Implementing National Standard 1 of the
+      #.799 value retrieved from Technical Guidance On the Use of Precautionary
+      # Approaches to Implementing National Standard 1 of the
       # Magnuson-Stevens Fishery Conservation and Management Act 1998
       filtered_area_new.at[index, 'Depleted'] = 'Yes'
 
+  #Output
   print('----------------------------------------------------------------------------')
   print('Analysis:', end='\n\n')
   print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
   depletion_totals = filtered_area_new['Depleted'].value_counts()
   # print(depletion_totals)
-  # print(depletion_totals['No'])
   if depletion_totals.index.str.contains('Yes').any():
     depl_yes = int(depletion_totals['Yes'])
   else:
@@ -285,7 +280,6 @@ def bar_graph_per_annum_tlw (fishing):
 
   # print(sum_new)
   # year_annum = sum_everything.loc[3:14]
-  # years = fishing.loc()
   y_pos = np.arange(len(years))
   plt.bar(y_pos, sum_each_year)
   plt.xticks(y_pos, years)
@@ -300,6 +294,7 @@ def bar_graph_per_annum_tlw (fishing):
   
 
 def main_function ():
+  #Menu
   print('|==========================================================================|')
   print('Available Functions:', end='\n\n')
   print('Numerical Analysis:', end='\n\n')
@@ -356,12 +351,10 @@ def main_function ():
     bar_graph_per_annum_tlw(fishing_test)
 
   if option == 0:
+    print('Thank you for using this program!')
     exit()
 
 
 main_function()
 
-#   #contains all of the functions and runs conditionally based on your decision
-#menu on the gui/terminal to select functions you want to run
 # modularize
-# add matplotlib 
