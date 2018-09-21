@@ -238,7 +238,7 @@ def bar_graph_per_annum_tlw (fishing):
   years = fishing.columns[3:14]
   # print(fishing[:].sum())
   sum_each_year = fishing[:].sum().values[3:14]
-  print(sum_each_year)
+  # print(sum_each_year)
   sum_new = []
   for x,y in enumerate(sum_each_year):
     print(y)
@@ -249,13 +249,13 @@ def bar_graph_per_annum_tlw (fishing):
   # year_annum = sum_everything.loc[3:14]
   # years = fishing.loc()
   y_pos = np.arange(len(years))
-  plt.bar(y_pos, sum_new)
+  plt.bar(y_pos, sum_each_year)
   plt.xticks(y_pos, years)
   plt.ylabel('Tons of Live Weight (TLW)')
   plt.xlabel('Year')
-  plt.title('Aggregated Catch Data per Annum in Northeast Atlantic from 2006-2016')
+  plt.title('Aggregated Catch Data per Annum in Northeast Atlantic (2006-2016)')
   for a,b in enumerate(sum_new):
-    plt.text(a, b, str(b), fontsize=10, horizontalalignment='center')
+    plt.text(a, b, str(b), fontsize=9, horizontalalignment='center')
   plt.show()
   main_function()
   
