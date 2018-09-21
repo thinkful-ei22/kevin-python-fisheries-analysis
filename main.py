@@ -26,30 +26,32 @@ fishing_test.insert(len(fishing_test.columns), 'Depleted', 'No')
 # print(fishing[['Unnamed: 23']])
 # print(tabulate(fishing_two, headers='keys', tablefmt='grid'))
 
-def depletion_breakdown (original, fishing, lower, upper):
-  try:  
+def depletion_breakdown (original, fishing, lower, upper): 
+  
+  try:
     l_count = 0
     u_count = 0
     for column in fishing:
       # print(column)
       # print(lower == column, lower)
+      # print(l_count)
       if lower == column:
         l_count+=1
-      else:
-        continue
-      if l_count == 0: 
-        raise KeyError('This is not a valid lower limit Year')
-        break
-      if upper == column:
+      elif upper == column:
         u_count+=1
       else:
         continue
-      if u_count == 0:
-        raise KeyError('This is not a valid upper limit Year')
-        break
+
+    if l_count == 0: 
+      raise KeyError('This is not a valid lower limit Year')
+      return
+    if u_count == 0:
+      raise KeyError('This is not a valid upper limit Year')
+      return
   except Exception as error: 
     print('Caught this error: ' + repr(error))
-
+    return
+    
   for index, row in fishing.iterrows():
     # print(row, index)
     if row[upper] < row[lower]*.799:
@@ -257,10 +259,12 @@ def bar_graph_per_annum_tlw (fishing):
   for a,b in enumerate(sum_new):
     plt.text(a, b, str(b), fontsize=9, horizontalalignment='center')
   plt.show()
+  # plt.save("somefile.png")
   main_function()
   
 
 def main_function ():
+  print('==================================================================|')
   print('Available Functions:', end='\n\n')
   print('Numerical Analysis:', end='\n\n')
   print('Enter 1 to Determine Total Annual Catch for a Year.')
@@ -271,6 +275,7 @@ def main_function ():
   print('Graphical Representation:', end='\n\n')
   print('Enter 6 to Display a Bar Graph of each Years Annual TLW from 2006 to 2016.')
   print('Pie Chart of each Species and its Depletion Percentage.', end='\n\n')
+  print('==================================================================|')
   
   option = input('Enter in an option to run an analytical function (or 0 to exit):  ')
   option = int(option)
