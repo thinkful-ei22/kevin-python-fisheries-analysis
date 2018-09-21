@@ -38,6 +38,7 @@ def log_number_of_species (fishing):
 def sum_annual_tlw (fishing, year):
   try:
     count = 0
+
     for column in fishing:
       if year == column:
         count+=1
@@ -60,71 +61,6 @@ def sum_annual_tlw (fishing, year):
   print('In %d, there was a total of %.2f TLW (tons live weight) fish and shellfish caught in the Northeast Atlantic.' % (year, tlw_annual), end='\n\n')
   print('----------------------------------------------------------------------------')
   main_function()
-
-
-def depletion_breakdown (original, fishing, lower, upper): 
-  try:
-    l_count = 0
-    u_count = 0
-    for column in fishing:
-      # print(column)
-      # print(l_count)
-      if lower == column:
-        l_count+=1
-      elif upper == column:
-        u_count+=1
-      else:
-        continue
-
-    if l_count == 0: 
-      raise KeyError('This is not a valid lower limit Year.')
-      return
-    if u_count == 0:
-      raise KeyError('This is not a valid upper limit Year.')
-      return
-  except Exception as error: 
-    print('Caught this error: ' + repr(error))
-    return
-    
-  for index, row in fishing.iterrows():
-    # print(row, index)
-    if row[upper] < row[lower]*.799:
-      #.799 value retrieved from Technical Guidance On the Use of Precautionary
-      # Approaches to Implementing National Standard 1 of the
-      # Magnuson-Stevens Fishery Conservation and Management Act 1998
-      fishing.at[index, 'Depleted'] = 'Yes'
-
-  fishing_new_1 = fishing.loc[:, upper:lower]
-  fishing_new_2 = fishing.loc[:, ['Depleted', 'Area', 'Species', 'Country']]
-  fishing_new_new = pd.concat([fishing_new_1, fishing_new_2], axis=1)
-  #Output
-  print('----------------------------------------------------------------------------')
-  print('Analysis:', end='\n\n')
-  print(tabulate(fishing_new_new, headers='keys', tablefmt='grid'))
-  original_data = len(original)
-  print('There are %d total entries in the 2006-2016 ICES Nominal Catch Dataset.' % original_data, end='\n\n')
-  filtered_data = len(fishing_data)
-  print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, len(fishing_test)), end='\n\n')
-  df = fishing['Species'].value_counts()
-  unique_species = len(df)
-  print('There are %d unique fish and shellfish species being caught' % unique_species)
-  print('during this year range by participating European Countries in the Atlantic Northeast.', end='\n\n')
-  depletion_totals = fishing_test['Depleted'].value_counts()
-  if depletion_totals.index.str.contains('Yes').any():
-    depl_yes = int(depletion_totals['Yes'])
-  else:
-    depl_yes = 0
-
-  if depletion_totals.index.str.contains('No').any():
-    depl_no = int(depletion_totals['No'])
-  else:
-    depl_no = 0
-  percentage = (depl_yes/(depl_no+depl_yes))*100
-  print('There are %d entries that are classified as depleted and %d entries that are not -- a percentage'  % (depl_yes, depl_no))
-  print('of %.2f%% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.' % percentage)
-  print('----------------------------------------------------------------------------')
-  main_function()
-  #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
 
 
 def sum_aggregate_tlw_range (fishing, lower, upper):
@@ -161,6 +97,79 @@ def sum_aggregate_tlw_range (fishing, lower, upper):
   main_function() 
 
 
+def depletion_breakdown (original, fishing, lower, upper): 
+  try:
+    l_count = 0
+    u_count = 0
+
+    for column in fishing:
+      # print(column)
+      # print(l_count)
+      if lower == column:
+        l_count+=1
+      elif upper == column:
+        u_count+=1
+      else:
+        continue
+
+    if l_count == 0: 
+      raise KeyError('This is not a valid lower limit Year.')
+      return
+    if u_count == 0:
+      raise KeyError('This is not a valid upper limit Year.')
+      return
+
+  except Exception as error: 
+    print('Caught this error: ' + repr(error))
+    return
+    
+  for index, row in fishing.iterrows():
+    # print(row, index)
+    if row[upper] < row[lower]*.799:
+      #.799 value retrieved from Technical Guidance On the Use of Precautionary
+      # Approaches to Implementing National Standard 1 of the
+      # Magnuson-Stevens Fishery Conservation and Management Act 1998
+      fishing.at[index, 'Depleted'] = 'Yes'
+
+  fishing_new_1 = fishing.loc[:, upper:lower]
+
+  fishing_new_2 = fishing.loc[:, ['Depleted', 'Area', 'Species', 'Country']]
+
+  fishing_new_new = pd.concat([fishing_new_1, fishing_new_2], axis=1)
+
+  #Output
+  print('----------------------------------------------------------------------------')
+  print('Analysis:', end='\n\n')
+  print(tabulate(fishing_new_new, headers='keys', tablefmt='grid'))
+  original_data = len(original)
+  print('There are %d total entries in the 2006-2016 ICES Nominal Catch Dataset.' % original_data, end='\n\n')
+  filtered_data = len(fishing_data)
+  print('Out of the %d, %d filtered entries are being analyzed that contain non-zero values.' % (original_data, len(fishing_test)), end='\n\n')
+  df = fishing['Species'].value_counts()
+  unique_species = len(df)
+  print('There are %d unique fish and shellfish species being caught' % unique_species)
+  print('during this year range by participating European Countries in the Atlantic Northeast.', end='\n\n')
+  
+  depletion_totals = fishing_test['Depleted'].value_counts()
+  
+  if depletion_totals.index.str.contains('Yes').any():
+    depl_yes = int(depletion_totals['Yes'])
+  else:
+    depl_yes = 0
+
+  if depletion_totals.index.str.contains('No').any():
+    depl_no = int(depletion_totals['No'])
+  else:
+    depl_no = 0
+
+  percentage = (depl_yes/(depl_no+depl_yes))*100
+
+  print('There are %d entries that are classified as depleted and %d entries that are not -- a percentage'  % (depl_yes, depl_no))
+  print('of %.2f%% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.' % percentage)
+  print('----------------------------------------------------------------------------')
+  main_function()
+  #this discrepancy from 50,000+ to 7000 is likely due to some species of fish and shellfish being naturally rare/scarce in some waters
+
 def detailed_species_depletion (fishing, species):
   try:
     count = 0
@@ -175,8 +184,6 @@ def detailed_species_depletion (fishing, species):
     print('Caught this error: ' + repr(error))
     return
 
-  # print(species, type(species))
-  # print(fishing)
   filtered_species_1 = fishing.loc[fishing['Species'] == species, '2016': '2006']
   # print(filtered_species_1)
   filtered_species_2 = fishing.loc[:, ['Depleted', 'Area', 'Country', 'Species']]
@@ -198,7 +205,9 @@ def detailed_species_depletion (fishing, species):
   print('----------------------------------------------------------------------------')
   print('Analysis:', end='\n\n')
   print(tabulate(filtered_species_new, headers='keys', tablefmt='grid'), end='\n\n')
+
   depletion_totals = filtered_species_new['Depleted'].value_counts()
+
   if depletion_totals.index.str.contains('Yes').any():
     depl_yes = int(depletion_totals['Yes'])
   else:
@@ -208,8 +217,10 @@ def detailed_species_depletion (fishing, species):
     depl_no = int(depletion_totals['No'])
   else:
     depl_no = 0
+
   proportion = depl_yes/(depl_no+depl_yes)
   percentage = proportion*100
+
   print('Based on data analysis, this species -- %s -- shows depleted status on %.2f%% of the areas it is fished in \n the past decade, from 2006 to 2016.'  % (species, percentage))
   print('This is based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.', end='\n\n')
   print('----------------------------------------------------------------------------')
@@ -254,6 +265,7 @@ def area_code_breakdown (fishing, area_code, lower, upper):
   filtered_area_2 = fishing.loc[:, ['Depleted', 'Country', 'Species', 'Area']]
   # print(filtered_area_2)
   filtered_area_new = pd.concat([filtered_area_1, filtered_area_2], axis=1)
+
   filtered_area_new = filtered_area_new.dropna(axis='rows')
   # print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
   for index, row in filtered_area_new.iterrows():
@@ -268,8 +280,10 @@ def area_code_breakdown (fishing, area_code, lower, upper):
   print('----------------------------------------------------------------------------')
   print('Analysis:', end='\n\n')
   print(tabulate(filtered_area_new, headers='keys', tablefmt='grid'), end='\n\n')
+
   depletion_totals = filtered_area_new['Depleted'].value_counts()
   # print(depletion_totals)
+
   if depletion_totals.index.str.contains('Yes').any():
     depl_yes = int(depletion_totals['Yes'])
   else:
@@ -279,7 +293,9 @@ def area_code_breakdown (fishing, area_code, lower, upper):
     depl_no = int(depletion_totals['No'])
   else:
     depl_no = 0
+
   percentage = (depl_yes/(depl_no+depl_yes))*100
+
   print('Based on data analysis, this area code -- %s -- shows depleted status on %.2f%% of the entries it is fished in \n the past decade, from 2006 to 2016.'  % (area_code, percentage))
   print('This is based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.', end='\n\n')
   print('----------------------------------------------------------------------------')
@@ -300,15 +316,19 @@ def bar_graph_per_annum_tlw (fishing):
   print(sum_new, sum_new[0], type(sum_new[0]))
   # year_annum = sum_everything.loc[3:14]
   y_pos = np.arange(len(years))
-  # print(y_pos)
-  # print(sum_new)
-  # print(max(sum_new))
+  # print(sum_new, max(sum_new), min(sum_new))
   plt.bar(y_pos, sum_new)
+
   plt.ylim([min(sum_new) - (min(sum_new)*.03), max(sum_new) + (max(sum_new)*.03)])
+
   plt.xticks(y_pos, years)
+
   plt.ylabel('Tons of Live Weight (x10⁷)')
+
   plt.xlabel('Year')
+
   plt.title('Aggregated Catch Data per Annum in Northeast Atlantic (2006-2016)')
+
   for a,b in enumerate(sum_new):
     plt.text(a, b, str(b), fontsize=9, horizontalalignment='center')
   plt.show()
@@ -340,7 +360,6 @@ def main_function ():
   
   option = input('Enter in an option to run an analytical function (or 0 to exit):  ')
   option = int(option)
-  # print(option)
   if option == 1:
     analyzing_in_progress()
     log_number_of_species(fishing)
