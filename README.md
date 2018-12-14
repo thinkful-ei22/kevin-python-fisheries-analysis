@@ -29,7 +29,7 @@
   Users can display a bar graph of each years annual TLW from 2006 to 2016 of the entire Dataset.
 
   ## Report Conclusions
-  Through analysis with the help of python, it was determined that there are 3487 entries that are classified as depleted and another 3856 entries that are not out of the 7,343 examined. This evaluates to a percentage of 47.49% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.
+  Through analysis with the help of Python 3, it was determined that there are 3487 entries that are classified as depleted and another 3856 entries that are not out of the 7,343 examined. This evaluates to a percentage of 47.49% based on a TAC value of 0.80 - Total Allowable Catch - to maintain sustainability.
 
   Bear in mind that this does NOT include other nations that may or may not be fishing in these waters as well -- this ONLY utilizes ICES data compiled from 20 participating European countries. 
 
