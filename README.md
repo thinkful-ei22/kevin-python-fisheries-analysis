@@ -35,11 +35,11 @@
 
   This also does not take into account other sources of environmental degradation that pose varying levels of stress to the marine environment like trawling, microplastics, oil, and chemical contamination including but not limited to carbon dioxide (CO2), volatile organic compounds (VOCs), chlorofluorocarbons (CFCs), and heavy metals like lead (Pb) and mercury (Hg).
 
-  ![Bar Graph](./env/screenshots/BarGraphSubset.png)
+  ![Bar Graph](./screenshots/BarGraphSubset.png)
 
   This is a Bar Graph generated via matplotlib function #7, using a small subset of the data entries (6).
 
-  ![Bar Graph](./env/screenshots/BarGraphAllEntries.png)
+  ![Bar Graph](./screenshots/BarGraphAllEntries.png)
 
   This is a Bar Graph generated via matplotlib function #7 using all of the 7343 entries containing non-zero values.
 
